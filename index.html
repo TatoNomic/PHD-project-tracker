@@ -1,352 +1,483 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Calendar, 
-  Clock, 
-  Trophy, 
-  BookOpen, 
-  Target, 
-  GraduationCap,
-  TrendingUp,
-  Mic,
-  Cpu,
-  Dna,
-  CheckCircle2,
-  AlertCircle,
-  Library,
-  PartyPopper
-} from 'lucide-react';
-
-const App = () => {
-  // Use a fixed baseline of today's date (June 21, 2026) to ensure calculations are perfectly matched to now.
-  const [now, setNow] = useState(new Date('2026-06-21T20:28:00'));
-
-  // PhD Dates
-  const startDate = new Date('2026-02-01');
-  const endDate = new Date('2030-02-01');
-  
-  useEffect(() => {
-    // Keep clock ticking by adding seconds to our active session base time
-    const timer = setInterval(() => {
-      setNow(prev => new Date(prev.getTime() + 1000));
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  // Precise date calculations
-  const totalDuration = endDate.getTime() - startDate.getTime();
-  const elapsed = now.getTime() - startDate.getTime();
-  const percentage = Math.min(100, Math.max(0, (elapsed / totalDuration) * 100));
-  
-  const diffDays = (date1, date2) => Math.ceil(Math.abs(date1 - date2) / (1000 * 60 * 60 * 24));
-  const daysPassed = diffDays(now, startDate);
-  const daysLeft = diffDays(endDate, now);
-  const totalDays = diffDays(endDate, startDate);
-
-  // Accurate month calculation (using standard 30.44 days per month)
-  const monthsPassed = (daysPassed / 30.4375).toFixed(1);
-  const monthsLeft = (daysLeft / 30.4375).toFixed(1);
-  const currentMonth = Math.min(48, Math.max(1, Math.ceil(elapsed / (totalDuration / 48))));
-
-  const milestones = [
-    { name: 'Start Date', date: 'Feb 1, 2026', pos: 0, status: 'completed' },
-    { name: 'Target Setting Paperwork', date: 'Submitted', pos: 2, status: 'completed' },
-    { name: 'Initial Review', date: 'Feb 2027', pos: 25, status: percentage >= 25 ? 'completed' : 'upcoming' },
-    { name: 'Upgrade Window', date: 'Apr - Aug 2027', pos: 33, status: percentage >= 33 ? 'completed' : 'upcoming' },
-    { name: 'Final Submission', date: 'Feb 2030', pos: 100, status: 'goal' },
-  ];
-
-  const aims = [
-    { id: 1, title: "AI Integration (Implementation)", icon: <Cpu className="text-blue-500" />, desc: "RAG-based AI agents for GLAD-MHG operations.", status: "In Pilot Phase" },
-    { id: 2, title: "Speech Phenotyping", icon: <Mic className="text-purple-500" />, desc: "Scalable voice capture using Qualtrics/JS.", status: "Prototype Phase" },
-    { id: 3, title: "Multi-Omic Integration", icon: <Dna className="text-emerald-500" />, desc: "Relapse prediction modeling.", status: "Years 2-4" }
-  ];
-
-  const litReviewTopics = [
-    { title: "AI in Clinical Recruitment Systems", status: "Completed" },
-    { title: "RAG Architectures in Healthcare", status: "Completed" },
-    { title: "Copilot Studio & Enterprise Governance", status: "Completed" },
-    { title: "AI for Lab Stock/Logistics Monitoring", status: "Completed" },
-    { title: "Implementation Science Frameworks", status: "Completed" },
-    { title: "Commercial vs Open-Source AI Tools", status: "Completed" }
-  ];
-
-  const completedMilestones = [
-    { id: 1, title: "PhD Enrollment & Induction", date: "Feb 2026" },
-    { id: 2, title: "Target Setting Paperwork (IoPPN)", date: "Feb 2026" },
-    { id: 3, title: "Comprehensive Literature Review", date: "Apr 2026" },
-    { id: 4, title: "Initial Supervisory Meeting", date: "Feb 16, 2026" }
-  ];
-
-  return (
-    <div className="min-h-screen bg-[#F8FAFC] p-4 md:p-8 font-sans text-slate-900">
-      <div className="max-w-6xl mx-auto space-y-6">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esteban Tato-Barcia • PhD Journey Tracker</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-[#F8FAFC] p-4 md:p-8 text-slate-900">
+    <div class="max-w-6xl mx-auto space-y-6">
         
-        {/* Header Section */}
-        <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-6 rounded-3xl shadow-sm border border-slate-200/60">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2 text-indigo-600">
-              <GraduationCap size={22} strokeWidth={2.5} />
-              <span className="font-bold tracking-widest uppercase text-xs">Esteban Tato-Barcia • KCL PhD</span>
+        <!-- Header Section -->
+        <header class="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-6 rounded-3xl shadow-sm border border-slate-200/60">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2 text-indigo-600">
+              <!-- Inline SVG for GraduationCap -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/></svg>
+              <span class="font-bold tracking-widest uppercase text-xs">Esteban Tato-Barcia • KCL PhD</span>
             </div>
-            <h1 className="text-3xl font-black text-slate-800 tracking-tight">PhD Journey Tracker</h1>
-            <p className="text-slate-500 text-sm font-medium">
+            <h1 class="text-3xl font-black text-slate-800 tracking-tight">PhD Journey Tracker</h1>
+            <p class="text-slate-500 text-sm font-medium">
               Supervisors: <span className="text-slate-700 font-bold underline decoration-indigo-200 decoration-2">Prof. Gerome Breen & Dr. Nicholas Cummins</span>
             </p>
           </div>
           
-          <div className="flex flex-col items-end gap-2">
-            <div className="flex items-center gap-3 bg-slate-900 px-4 py-2 rounded-2xl text-white font-bold text-sm shadow-lg shadow-slate-200">
-              <Clock size={16} />
-              <span>{now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
+          <div class="flex flex-col items-end gap-2">
+            <div class="flex items-center gap-3 bg-slate-900 px-4 py-2 rounded-2xl text-white font-bold text-sm shadow-lg shadow-slate-200">
+              <!-- Inline SVG for Clock -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span id="live-clock">--:--:--</span>
             </div>
-            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-1 rounded">
-              Current Date: {now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-1 rounded">
+              Part-Time Track • Earliest Possible Path
             </div>
           </div>
         </header>
 
-        {/* Top Progress Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 bg-white p-8 rounded-3xl shadow-sm border border-slate-200/60">
-            <div className="flex justify-between items-end mb-8">
-              <div className="space-y-1">
-                <span className="text-6xl font-black text-indigo-600 tabular-nums tracking-tighter">
-                  {percentage.toFixed(1)}%
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2 bg-white p-8 rounded-3xl shadow-sm border border-slate-200/60">
+            <div class="flex justify-between items-end mb-8">
+              <div class="space-y-1">
+                <span id="percentage-display" class="text-6xl font-black text-indigo-600 tabular-nums tracking-tighter">
+                  0.0%
                 </span>
-                <p className="text-slate-400 font-bold uppercase text-[10px] tracking-[0.2em] ml-1">Overall Journey Progress</p>
+                <p class="text-slate-400 font-bold uppercase text-[10px] tracking-[0.2em] ml-1">Overall Journey Progress</p>
               </div>
-              <div className="text-right">
-                <p className="text-sm font-bold text-slate-800 flex items-center justify-end gap-2">
-                  <TrendingUp size={16} className="text-indigo-500" />
-                  Month {currentMonth} / 48
+              <div class="text-right">
+                <p class="text-sm font-bold text-slate-800 flex items-center justify-end gap-2">
+                  <!-- Inline SVG for TrendingUp -->
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-500"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                  <span id="months-badge">Month -- / 48</span>
                 </p>
-                <p className="text-xs text-slate-400 font-medium italic">"Upgrade Window: Month 14 — 18"</p>
+                <p class="text-xs text-slate-400 font-medium italic">"Upgrade Window: Month 14 — 18"</p>
               </div>
             </div>
             
-            <div className="relative h-4 w-full bg-slate-100 rounded-full overflow-hidden mb-12 shadow-inner">
+            <div class="relative h-4 w-full bg-slate-100 rounded-full overflow-hidden mb-12 shadow-inner">
               <div 
-                className="absolute top-0 left-0 h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transition-all duration-1000 ease-out rounded-full shadow-lg"
-                style={{ width: `${percentage}%` }}
-              />
+                id="progress-bar"
+                class="absolute top-0 left-0 h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transition-all duration-1000 ease-out rounded-full shadow-lg"
+                style="width: 0%"
+              ></div>
             </div>
 
-            <div className="relative">
-              <div className="absolute top-4 left-0 w-full h-0.5 bg-slate-100 -z-0"></div>
-              <div className="flex justify-between relative z-10">
-                {milestones.map((m, i) => (
-                  <div key={i} className="flex flex-col items-center group">
-                    <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all duration-500
-                      ${m.status === 'completed' ? 'bg-indigo-600 border-indigo-200 text-white shadow-md' : 
-                        m.status === 'goal' ? 'bg-white border-pink-500 text-pink-500 shadow-sm' : 
-                        'bg-white border-slate-200 text-slate-300 shadow-sm'}`}>
-                      {m.status === 'completed' ? <CheckCircle2 size={14} /> : <Target size={14} />}
-                    </div>
-                    <div className="mt-4 text-center">
-                      <p className={`text-[9px] font-black uppercase tracking-tighter ${m.status === 'completed' ? 'text-indigo-600' : 'text-slate-400'}`}>
-                        {m.date}
-                      </p>
-                      <p className={`text-[10px] font-bold max-w-[70px] mt-1 ${m.status === 'completed' ? 'text-slate-800' : 'text-slate-400'}`}>
-                        {m.name}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+            <!-- Interactive Milestones Timeline -->
+            <div class="relative">
+              <div class="absolute top-4 left-0 w-full h-0.5 bg-slate-100 -z-0"></div>
+              <div id="milestones-container" class="flex justify-between relative z-10">
+                <!-- Milestones will be rendered dynamically inside here -->
               </div>
             </div>
           </div>
 
-          {/* Time Remaining Card */}
-          <div className="bg-slate-900 text-white p-6 rounded-3xl shadow-xl flex flex-col justify-center gap-6">
+          <div class="bg-slate-900 text-white p-6 rounded-3xl shadow-xl flex flex-col justify-center gap-6">
             <div>
-              <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-2">Countdown to 2030</p>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-slate-400 text-sm font-medium">Days Left</span>
-                  <span className="text-2xl font-bold tracking-tight">{daysLeft.toLocaleString()}</span>
+              <p class="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-2">Countdown to 2030</p>
+              <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                  <span class="text-slate-400 text-sm font-medium">Days Left</span>
+                  <span id="days-left" class="text-2xl font-bold tracking-tight">--</span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-slate-400 text-sm font-medium">Months Left</span>
-                  <span className="text-2xl font-bold text-indigo-400">{monthsLeft}</span>
+                <div class="flex justify-between items-center">
+                  <span class="text-slate-400 text-sm font-medium">Months Left</span>
+                  <span id="months-left" class="text-2xl font-bold text-indigo-400">--</span>
                 </div>
-                <div className="h-px bg-slate-800 w-full my-2"></div>
-                <div className="flex justify-between items-center text-xs">
-                  <span className="text-slate-400 font-medium tracking-tight">Upgrade Window Opens</span>
-                  <span className="font-bold text-amber-400 uppercase">April 2027</span>
+                <div class="h-px bg-slate-800 w-full my-2"></div>
+                <div class="flex justify-between items-center text-xs">
+                  <span class="text-slate-400 font-medium tracking-tight">Upgrade Window Opens</span>
+                  <span class="font-bold text-amber-400 uppercase">April 2027</span>
                 </div>
-                <div className="flex justify-between items-center text-xs">
-                  <span className="text-slate-400 font-medium tracking-tight">Upgrade Hard Deadline</span>
-                  <span className="font-bold text-pink-400 uppercase">August 2027</span>
+                <div class="flex justify-between items-center text-xs">
+                  <span class="text-slate-400 font-medium tracking-tight">Upgrade Hard Deadline</span>
+                  <span class="font-bold text-pink-400 uppercase">August 2027</span>
                 </div>
               </div>
             </div>
-            <div className="bg-white/5 p-4 rounded-2xl border border-white/10">
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 text-center">Current Progress: {daysPassed} Days In</p>
+            <div class="bg-white/5 p-4 rounded-2xl border border-white/10">
+              <p id="progress-days-passed" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 text-center">Current Progress: -- Days In</p>
             </div>
           </div>
         </div>
 
-        {/* Dynamic Passed vs Remaining Math Visualizer */}
-        <div className="bg-white p-6 rounded-3xl border border-slate-200/60 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-3">
-            <h3 className="text-xs font-black uppercase tracking-wider text-indigo-600 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-indigo-600"></span>
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/60 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-3">
+            <h3 class="text-xs font-black uppercase tracking-wider text-indigo-600 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-indigo-600"></span>
               Time Elapsed (Passed)
             </h3>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                <span className="text-[10px] font-bold text-slate-400 uppercase block">Days Passed</span>
-                <span className="text-2xl font-black text-slate-800">{daysPassed}</span>
-                <span className="text-[9px] font-bold text-slate-400 block mt-1">Since Feb 1, 2026</span>
+            <div class="grid grid-cols-2 gap-3">
+              <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                <span class="text-[10px] font-bold text-slate-400 uppercase block">Days Passed</span>
+                <span id="math-days-passed" class="text-2xl font-black text-slate-800">--</span>
+                <span class="text-[9px] font-bold text-slate-400 block mt-1">Since Feb 1, 2026</span>
               </div>
-              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                <span className="text-[10px] font-bold text-slate-400 uppercase block">Months Passed</span>
-                <span className="text-2xl font-black text-indigo-600">{monthsPassed}</span>
-                <span className="text-[9px] font-bold text-slate-400 block mt-1">Out of 48.0 Months</span>
+              <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                <span class="text-[10px] font-bold text-slate-400 uppercase block">Months Passed</span>
+                <span id="math-months-passed" class="text-2xl font-black text-indigo-600">--</span>
+                <span class="text-[9px] font-bold text-slate-400 block mt-1">Out of 48.0 Months</span>
               </div>
             </div>
           </div>
 
-          <div className="space-y-3">
-            <h3 className="text-xs font-black uppercase tracking-wider text-pink-600 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-pink-500"></span>
+          <div class="space-y-3">
+            <h3 class="text-xs font-black uppercase tracking-wider text-pink-600 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-pink-500"></span>
               Time Remaining (Left)
             </h3>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                <span className="text-[10px] font-bold text-slate-400 uppercase block">Days Left</span>
-                <span className="text-2xl font-black text-slate-800">{daysLeft.toLocaleString()}</span>
-                <span className="text-[9px] font-bold text-slate-400 block mt-1">Until Feb 1, 2030</span>
+            <div class="grid grid-cols-2 gap-3">
+              <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                <span class="text-[10px] font-bold text-slate-400 uppercase block">Days Left</span>
+                <span id="math-days-left" class="text-2xl font-black text-slate-800">--</span>
+                <span class="text-[9px] font-bold text-slate-400 block mt-1">Until Feb 1, 2030</span>
               </div>
-              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                <span className="text-[10px] font-bold text-slate-400 uppercase block">Months Left</span>
-                <span className="text-2xl font-black text-pink-600">{monthsLeft}</span>
-                <span className="text-[9px] font-bold text-slate-400 block mt-1">To Complete PhD</span>
+              <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                <span class="text-[10px] font-bold text-slate-400 uppercase block">Months Left</span>
+                <span id="math-months-left" class="text-2xl font-black text-pink-600">--</span>
+                <span class="text-[9px] font-bold text-slate-400 block mt-1">To Complete PhD</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Literature Review Summary Section */}
-        <div className="bg-white p-6 rounded-3xl border border-slate-200/60 shadow-sm relative overflow-hidden">
-          <div className="absolute right-0 top-0 p-8 opacity-5">
-             <CheckCircle2 size={120} className="text-emerald-500" />
+        <div class="bg-amber-50/50 p-6 rounded-3xl border border-amber-200/60 shadow-sm flex flex-col md:flex-row gap-4 items-start">
+          <div class="p-3 bg-amber-100 text-amber-800 rounded-2xl">
+            <!-- Inline SVG for Info -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
           </div>
-          <div className="flex items-center justify-between mb-6 relative z-10">
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl">
-                <Library size={24} />
+          <div class="space-y-2">
+             <h3 class="font-black text-amber-900 text-sm uppercase tracking-wider">KCL Academic Regulations Baseline</h3>
+             <p class="text-xs text-amber-800 leading-relaxed font-medium">
+               As a part-time MPhil/PhD student registered at King's, your timelines are constrained by strict regulatory thresholds. Under standard rules:
+             </p>
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+               <div class="bg-white/80 p-3 rounded-xl border border-amber-200">
+                 <p class="text-[10px] font-black text-amber-950 uppercase">Earliest Allowed Upgrade</p>
+                 <p class="text-xs text-amber-900 font-bold mt-1">18 Months Part-Time (August 2027)</p>
+                 <p class="text-[9px] text-slate-500 mt-1">Equivalent to the 9-month full-time regulatory minimum threshold.</p>
+               </div>
+               <div class="bg-white/80 p-3 rounded-xl border border-amber-200">
+                 <p class="text-[10px] font-black text-amber-950 uppercase">Earliest Allowed Submission</p>
+                 <p class="text-xs text-amber-900 font-bold mt-1">4 Years Part-Time (February 1, 2030)</p>
+                 <p class="text-[9px] text-slate-500 mt-1">Equivalent to the 2-year full-time regulatory minimum threshold.</p>
+               </div>
+             </div>
+             <p class="text-[10px] font-bold text-amber-700 italic pt-1">
+               * Note: Your personal 4-year plan is already the absolute fastest possible path allowed under KCL's standard academic regulations for a part-time PhD.
+             </p>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/60 shadow-sm relative overflow-hidden">
+          <div class="absolute right-0 top-0 p-8 opacity-5">
+            <!-- Large decorative Checkmark -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-500"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="flex items-center justify-between mb-6 relative z-10">
+            <div class="flex items-center gap-3">
+              <div class="p-3 bg-emerald-50 text-emerald-600 rounded-2xl">
+                <!-- Inline SVG for Library -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/></svg>
               </div>
               <div>
-                <h3 className="font-black text-slate-800 text-lg tracking-tight">Literature Review Summary</h3>
-                <p className="text-xs text-slate-500 font-medium">Foundational review phases finished.</p>
+                <h3 class="font-black text-slate-800 text-lg tracking-tight">Literature Review Summary</h3>
+                <p class="text-xs text-slate-500 font-medium">Foundational review phases finished.</p>
               </div>
             </div>
-            <div className="flex items-center gap-2 bg-emerald-100 px-4 py-2 rounded-2xl border border-emerald-200 shadow-sm">
-              <PartyPopper size={14} className="text-emerald-600" />
-              <span className="text-[10px] font-black text-emerald-700 uppercase">Deliverable Submitted</span>
+            <div class="flex items-center gap-2 bg-emerald-100 px-4 py-2 rounded-2xl border border-emerald-200 shadow-sm">
+              <!-- Inline SVG for PartyPopper -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-600"><path d="M5.8 11.3 2 22l10.7-3.8c.1-.1.2-.2.2-.3V14h-4.3c-.1 0-.2-.1-.2-.2z"/><path d="M4 3h.01"/><path d="M20 8h.01"/><path d="M12 2h.01"/><path d="M16 4h.01"/><path d="M10 6h.01"/><path d="M18 2h.01"/><path d="M15 7h.01"/><path d="M11 4h.01"/><path d="M16 8h.01"/></svg>
+              <span class="text-[10px] font-black text-emerald-700 uppercase">Deliverable Submitted</span>
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 relative z-10">
-            {litReviewTopics.map((topic, i) => (
-              <div key={i} className="flex items-center gap-3 p-3 bg-emerald-50/30 rounded-2xl border border-emerald-100 transition-colors">
-                <CheckCircle2 size={14} className="text-emerald-500" />
-                <span className="text-[11px] font-bold text-slate-700 flex-1">{topic.title}</span>
-              </div>
-            ))}
+          <div id="lit-review-topics" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 relative z-10">
+             <!-- Lit review list items dynamically rendered -->
           </div>
         </div>
 
-        {/* Bottom Grid: Aims & Technical Roadmap */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           
-          {/* Research Aims */}
-          <div className="bg-white p-6 rounded-3xl border border-slate-200/60 shadow-sm">
-            <h3 className="font-black text-slate-800 uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
-              <Target size={16} className="text-indigo-600" />
+          <!-- Research Aims -->
+          <div class="bg-white p-6 rounded-3xl border border-slate-200/60 shadow-sm">
+            <h3 class="font-black text-slate-800 uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
+              <!-- Inline SVG for Target -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-600"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
               Core Research Aims
             </h3>
-            <div className="space-y-4">
-              {aims.map(aim => (
-                <div key={aim.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex gap-4 hover:bg-white transition-all">
-                  <div className="p-3 bg-white rounded-xl shadow-sm h-fit">
-                    {aim.icon}
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-bold text-slate-800">Aim {aim.id}: {aim.title}</h4>
-                    <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">{aim.desc}</p>
-                    <span className="inline-block mt-2 text-[9px] font-black uppercase text-indigo-500 tracking-tighter">{aim.status}</span>
-                  </div>
-                </div>
-              ))}
+            <div id="aims-list" class="space-y-4">
+               <!-- Research Aims rendered dynamically -->
             </div>
           </div>
 
-          {/* Technical Implementation Track & Milestones Met */}
-          <div className="space-y-6">
-            <div className="bg-white p-6 rounded-3xl border border-slate-200/60 shadow-sm">
-              <h3 className="font-black text-slate-800 uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
-                <Cpu size={16} className="text-blue-500" />
+          <!-- Technical Implementation Track & Milestones Met -->
+          <div class="space-y-6">
+            <div class="bg-white p-6 rounded-3xl border border-slate-200/60 shadow-sm">
+              <h3 class="font-black text-slate-800 uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
+                <!-- Inline SVG for Cpu -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="15" x2="23" y2="15"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="15" x2="4" y2="15"/></svg>
                 Next Phase Implementation
               </h3>
-              <div className="space-y-4">
-                <div className="p-4 bg-blue-50 rounded-2xl border border-blue-100">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="bg-blue-600 text-white text-[10px] font-black px-2 py-0.5 rounded">RAG PILOT</span>
-                    <span className="text-blue-800 text-[11px] font-bold">Copilot Studio</span>
+              <div class="space-y-4">
+                <div class="p-4 bg-blue-50 rounded-2xl border border-blue-100">
+                  <div class="flex items-center gap-2 mb-2">
+                    <span class="bg-blue-600 text-white text-[10px] font-black px-2 py-0.5 rounded">RAG PILOT</span>
+                    <span class="text-blue-800 text-[11px] font-bold">Copilot Studio</span>
                   </div>
-                  <p className="text-[11px] text-blue-700 leading-relaxed">
+                  <p class="text-[11px] text-blue-700 leading-relaxed">
                     Now focusing on <strong>red-team testing</strong> declarative agents grounded in RNA extraction SOPs and recruitment scripts.
                   </p>
                 </div>
 
-                <div className="p-4 bg-purple-50 rounded-2xl border border-purple-100">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="bg-purple-600 text-white text-[10px] font-black px-2 py-0.5 rounded">SPEECH</span>
-                    <span className="text-purple-800 text-[11px] font-bold">Qualtrics + JS API</span>
+                <div class="p-4 bg-purple-50 rounded-2xl border border-purple-100">
+                  <div class="flex items-center gap-2 mb-2">
+                    <span class="bg-purple-600 text-white text-[10px] font-black px-2 py-0.5 rounded">SPEECH</span>
+                    <span class="text-purple-800 text-[11px] font-bold">Qualtrics + JS API</span>
                   </div>
-                  <p className="text-[11px] text-purple-700 leading-relaxed">
+                  <p class="text-[11px] text-purple-700 leading-relaxed">
                     Developing metadata capture prototypes and setting up <strong>internal pilot recordings</strong> for intra-device variability.
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Individual Completed Milestones */}
-            <div className="bg-white p-6 rounded-3xl border border-slate-200/60 shadow-sm">
-              <h3 className="font-black text-slate-800 uppercase tracking-widest text-xs mb-4 flex items-center gap-2">
-                <CheckCircle2 size={16} className="text-emerald-500" />
+            <!-- Individual Completed Milestones -->
+            <div class="bg-white p-6 rounded-3xl border border-slate-200/60 shadow-sm">
+              <h3 class="font-black text-slate-800 uppercase tracking-widest text-xs mb-4 flex items-center gap-2">
+                <!-- Inline SVG for CheckCircle2 -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-500"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                 Completed Milestones
               </h3>
-              <div className="grid grid-cols-1 gap-2">
-                {completedMilestones.map((cm) => (
-                  <div key={cm.id} className="flex items-center justify-between p-3 bg-emerald-50/50 rounded-xl border border-emerald-100">
-                    <div className="flex items-center gap-3">
-                      <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center text-white">
-                        <CheckCircle2 size={12} />
-                      </div>
-                      <span className="text-[11px] font-bold text-slate-700">{cm.title}</span>
-                    </div>
-                    <span className="text-[9px] font-black text-emerald-600 uppercase tracking-tighter">{cm.date}</span>
-                  </div>
-                ))}
+              <div id="completed-milestones" class="grid grid-cols-1 gap-2">
+                 <!-- Rendered dynamically -->
               </div>
             </div>
           </div>
 
         </div>
 
-        {/* Footer */}
-        <footer className="text-center pb-8 pt-4">
-           <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.4em]">
+        <!-- Footer -->
+        <footer class="text-center pb-8 pt-4">
+           <p class="text-[10px] font-black text-slate-300 uppercase tracking-[0.4em]">
              GLAD-MHG Cohort • Digital Phenotyping • Implementation Science
            </p>
         </footer>
 
       </div>
-    </div>
-  );
-};
 
-export default App;
+      <script>
+         // Setup baseline dates
+         const startDate = new Date('2026-02-01T00:00:00');
+         const endDate = new Date('2030-02-01T00:00:00');
+         const totalDuration = endDate.getTime() - startDate.getTime();
+
+         // Lit Review Topics
+         const litReviewTopics = [
+            "AI in Clinical Recruitment Systems",
+            "RAG Architectures in Healthcare",
+            "Copilot Studio & Enterprise Governance",
+            "AI for Lab Stock/Logistics Monitoring",
+            "Implementation Science Frameworks",
+            "Commercial vs Open-Source AI Tools"
+         ];
+
+         // Core Aims list configurations
+         const aims = [
+            { 
+               id: 1, 
+               title: "AI Integration (Implementation)", 
+               icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="15" x2="23" y2="15"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="15" x2="4" y2="15"/></svg>`,
+               desc: "RAG-based AI agents for GLAD-MHG operations.", 
+               status: "In Pilot Phase" 
+            },
+            { 
+               id: 2, 
+               title: "Speech Phenotyping", 
+               icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple-500"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>`,
+               desc: "Scalable voice capture using Qualtrics/JS.", 
+               status: "Prototype Phase" 
+            },
+            { 
+               id: 3, 
+               title: "Multi-Omic Integration", 
+               icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-500"><path d="M4.5 16.5c-1.5 1.26-2.5 3.19-2.5 5.5s1 4.24 2.5 5.5"/><path d="M19.5 16.5c1.5 1.26 2.5 3.19 2.5 5.5s-1 4.24-2.5 5.5"/><path d="m22 8-6 4 6 4"/><path d="m2 8 6 4-6 4"/><path d="M12 2v20"/></svg>`,
+               desc: "Relapse prediction modeling.", 
+               status: "Years 2-4" 
+            }
+         ];
+
+         // Completed Milestones met
+         const completedMilestones = [
+            { id: 1, title: "PhD Enrollment & Induction", date: "Feb 2026" },
+            { id: 2, title: "Target Setting Paperwork (IoPPN)", date: "Feb 2026" },
+            { id: 3, title: "Comprehensive Literature Review", date: "Apr 2026" },
+            { id: 4, title: "Initial Supervisory Meeting", date: "Feb 16, 2026" }
+         ];
+
+         // Helper function for calculations
+         function updateTracker() {
+            const now = new Date(); // Real system date
+            
+            // Core calculations
+            const elapsed = now.getTime() - startDate.getTime();
+            const percentage = Math.min(100, Math.max(0, (elapsed / totalDuration) * 100));
+            
+            const diffDays = (d1, d2) => Math.ceil(Math.abs(d1 - d2) / (1000 * 60 * 60 * 24));
+            const daysPassed = diffDays(now, startDate);
+            const daysLeft = diffDays(endDate, now);
+            const monthsLeft = (daysLeft / 30.4375).toFixed(1);
+            const monthsPassed = (daysPassed / 30.4375).toFixed(1);
+
+            // Update DOM metrics
+            document.getElementById('percentage-display').innerText = percentage.toFixed(1) + '%';
+            document.getElementById('progress-bar').style.width = percentage.toFixed(1) + '%';
+            document.getElementById('months-badge').innerText = `Month ${Math.ceil(monthsPassed)} / 48`;
+            
+            document.getElementById('days-left').innerText = daysLeft.toLocaleString();
+            document.getElementById('months-left').innerText = monthsLeft;
+            document.getElementById('progress-days-passed').innerText = `Current Progress: ${daysPassed} Days In`;
+
+            // Math visualizer DOM
+            document.getElementById('math-days-passed').innerText = daysPassed;
+            document.getElementById('math-months-passed').innerText = monthsPassed;
+            document.getElementById('math-days-left').innerText = daysLeft.toLocaleString();
+            document.getElementById('math-months-left').innerText = monthsLeft;
+
+            // Render interactive timeline milestones with dynamic status coloring
+            const milestones = [
+               { name: 'Start Date', date: 'Feb 1, 2026', pos: 0, status: 'completed' },
+               { name: 'Target Setting Paperwork', date: 'Submitted', pos: 2, status: 'completed' },
+               { name: 'Initial Review', date: 'Feb 2027', pos: 25, status: percentage >= 25 ? 'completed' : 'upcoming' },
+               { name: 'Upgrade Window', date: 'Apr - Aug 2027', pos: 33, status: percentage >= 33 ? 'completed' : 'upcoming' },
+               { name: 'Final Submission', date: 'Feb 2030', pos: 100, status: 'goal' },
+            ];
+
+            const milestonesContainer = document.getElementById('milestones-container');
+            milestonesContainer.innerHTML = '';
+            
+            milestones.forEach(m => {
+               const node = document.createElement('div');
+               node.className = 'flex flex-col items-center group';
+               
+               let iconClass = '';
+               let iconMarkup = '';
+
+               if (m.status === 'completed') {
+                  iconClass = 'bg-indigo-600 border-indigo-200 text-white shadow-md';
+                  iconMarkup = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`;
+               } else if (m.status === 'goal') {
+                  iconClass = 'bg-white border-pink-500 text-pink-500 shadow-sm';
+                  iconMarkup = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>`;
+               } else {
+                  iconClass = 'bg-white border-slate-200 text-slate-300 shadow-sm';
+                  iconMarkup = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>`;
+               }
+
+               node.innerHTML = `
+                  <div class="w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all duration-500 ${iconClass}">
+                     ${iconMarkup}
+                  </div>
+                  <div class="mt-4 text-center">
+                     <p class="text-[9px] font-black uppercase tracking-tighter ${m.status === 'completed' ? 'text-indigo-600' : 'text-slate-400'}">
+                        ${m.date}
+                     </p>
+                     <p class="text-[10px] font-bold max-w-[70px] mt-1 ${m.status === 'completed' ? 'text-slate-800' : 'text-slate-400'}">
+                        ${m.name}
+                     </p>
+                  </div>
+               `;
+               milestonesContainer.appendChild(node);
+            });
+         }
+
+         // Static list renders on boot
+         function initializeDashboard() {
+            // Render Lit Review checklist items
+            const litContainer = document.getElementById('lit-review-topics');
+            litContainer.innerHTML = '';
+            litReviewTopics.forEach(topic => {
+               const el = document.createElement('div');
+               el.className = 'flex items-center gap-3 p-3 bg-emerald-50/30 rounded-2xl border border-emerald-100 transition-colors';
+               el.innerHTML = `
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-500"><path d="M20 6 9 17l-5-5"/></svg>
+                  <span class="text-[11px] font-bold text-slate-700 flex-1">${topic}</span>
+               `;
+               litContainer.appendChild(el);
+            });
+
+            // Render Research Aims
+            const aimsContainer = document.getElementById('aims-list');
+            aimsContainer.innerHTML = '';
+            aims.forEach(aim => {
+               const el = document.createElement('div');
+               el.className = 'p-4 rounded-2xl bg-slate-50 border border-slate-100 flex gap-4 hover:bg-white transition-all';
+               el.innerHTML = `
+                  <div class="p-3 bg-white rounded-xl shadow-sm h-fit">
+                     ${aim.icon}
+                  </div>
+                  <div>
+                     <h4 class="text-sm font-bold text-slate-800">Aim ${aim.id}: ${aim.title}</h4>
+                     <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">${aim.desc}</p>
+                     <span class="inline-block mt-2 text-[9px] font-black uppercase text-indigo-500 tracking-tighter">${aim.status}</span>
+                  </div>
+               `;
+               aimsContainer.appendChild(el);
+            });
+
+            // Render Completed milestones met list
+            const completedContainer = document.getElementById('completed-milestones');
+            completedContainer.innerHTML = '';
+            completedMilestones.forEach(cm => {
+               const el = document.createElement('div');
+               el.className = 'flex items-center justify-between p-3 bg-emerald-50/50 rounded-xl border border-emerald-100';
+               el.innerHTML = `
+                  <div class="flex items-center gap-3">
+                     <div class="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                     </div>
+                     <span class="text-[11px] font-bold text-slate-700">${cm.title}</span>
+                  </div>
+                  <span class="text-[9px] font-black text-emerald-600 uppercase tracking-tighter">${cm.date}</span>
+               `;
+               completedContainer.appendChild(el);
+            });
+         }
+
+         // Real time digital ticking clock
+         function runClock() {
+            setInterval(() => {
+               const timer = new Date();
+               document.getElementById('live-clock').innerText = timer.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            }, 1000);
+         }
+
+         window.onload = function() {
+            initializeDashboard();
+            updateTracker();
+            runClock();
+            
+            // Redraw dynamics if they keep the window open across midnights
+            setInterval(updateTracker, 60000); 
+         };
+      </script>
+</body>
+</html>
