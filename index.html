@@ -13,6 +13,21 @@
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
                     },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-subtle': 'bounceSubtle 2s infinite',
+                        'float': 'float 4s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        bounceSubtle: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-4px)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-8px)' },
+                        }
+                    }
                 }
             }
         }
@@ -23,9 +38,31 @@
         body {
             font-family: 'Inter', sans-serif;
         }
+        /* Custom CSS for Confetti Simulation particles */
+        .confetti-particle {
+            position: absolute;
+            z-index: 100;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: fall linear forwards;
+        }
+        @keyframes fall {
+            0% {
+                transform: translateY(-20px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
-<body class="min-h-screen bg-[#F8FAFC] p-4 md:p-8 text-slate-900">
+<body class="min-h-screen bg-[#F8FAFC] p-4 md:p-8 text-slate-900 relative overflow-x-hidden">
+    <!-- Confetti Target Area -->
+    <div id="confetti-container" class="absolute inset-0 pointer-events-none overflow-hidden z-50"></div>
+
     <div class="max-w-6xl mx-auto space-y-6">
         
         <!-- Header Section -->
@@ -38,7 +75,7 @@
             </div>
             <h1 class="text-3xl font-black text-slate-800 tracking-tight">PhD Journey Tracker</h1>
             <p class="text-slate-500 text-sm font-medium">
-              Supervisors: <span className="text-slate-700 font-bold underline decoration-indigo-200 decoration-2">Prof. Gerome Breen & Dr. Nicholas Cummins</span>
+              Supervisors: <span class="text-slate-700 font-bold underline decoration-indigo-200 decoration-2">Prof. Gerome Breen & Dr. Nicholas Cummins</span>
             </p>
           </div>
           
@@ -90,6 +127,7 @@
             </div>
           </div>
 
+          <!-- Countdown Card -->
           <div class="bg-slate-900 text-white p-6 rounded-3xl shadow-xl flex flex-col justify-center gap-6">
             <div>
               <p class="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-2">Countdown to 2030</p>
@@ -115,6 +153,77 @@
             </div>
             <div class="bg-white/5 p-4 rounded-2xl border border-white/10">
               <p id="progress-days-passed" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 text-center">Current Progress: -- Days In</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SPECIAL FEATURE: Road to 10% Milestone Interactive Widget -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="md:col-span-2 bg-gradient-to-br from-indigo-900 via-slate-950 to-purple-950 text-white p-6 rounded-3xl border border-indigo-500/20 shadow-xl relative overflow-hidden flex flex-col justify-between min-h-[220px]">
+             <!-- Abstract background waves -->
+             <div class="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-400 via-transparent to-transparent pointer-events-none"></div>
+             
+             <div class="relative z-10">
+               <div class="flex justify-between items-start">
+                 <div>
+                   <span class="px-2 py-1 text-[9px] font-black tracking-widest uppercase bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 rounded">Upcoming Target</span>
+                   <h2 class="text-2xl font-black tracking-tight mt-2">The Double-Digit 10% Milestone</h2>
+                 </div>
+                 <div class="text-right">
+                   <p class="text-xs text-indigo-200 font-semibold uppercase tracking-widest">Milestone Date</p>
+                   <p class="text-sm font-extrabold text-amber-400">Saturday, June 27, 2026</p>
+                 </div>
+               </div>
+
+               <!-- Micro progress climb visualizer -->
+               <div class="mt-6 space-y-2">
+                 <div class="flex justify-between items-center text-xs">
+                   <span class="text-indigo-200/80 font-medium">Climbing from Current Progress</span>
+                   <span id="climb-percentage" class="font-black text-indigo-300">9.6% / 10.0%</span>
+                 </div>
+                 <div class="h-2 w-full bg-slate-800 rounded-full overflow-hidden border border-indigo-500/10">
+                   <div id="climb-bar" class="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full" style="width: 95.8%"></div>
+                 </div>
+               </div>
+             </div>
+
+             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-6 pt-4 border-t border-indigo-500/10 relative z-10">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+                  <span id="countdown-10" class="text-xs font-bold text-indigo-100 tracking-tight">Counting down...</span>
+                </div>
+                <!-- Interactive Button to trigger custom confetti -->
+                <button 
+                  onclick="triggerMilestoneCelebration()"
+                  class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-4 py-2.5 rounded-xl border border-indigo-400/30 transition-all shadow-md flex items-center gap-1.5 self-start sm:self-auto"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                  Preview Celebration
+                </button>
+             </div>
+          </div>
+
+          <!-- Time Passed Math Visualizer (from previous feedback) -->
+          <div class="bg-white p-6 rounded-3xl border border-slate-200/60 shadow-sm flex flex-col justify-between">
+            <div>
+              <p class="text-xs font-black uppercase tracking-widest text-indigo-600 mb-1">Dynamic Calculation</p>
+              <h3 class="text-lg font-black text-slate-800 leading-tight">Formula Breakdown</h3>
+              <p class="text-xs text-slate-400 mt-1">Confirming the mathematical ratios for standard progress metrics.</p>
+              
+              <div class="mt-4 space-y-2.5">
+                <div class="flex justify-between text-xs font-bold">
+                  <span class="text-slate-500">Days Ratio:</span>
+                  <span class="text-slate-800"><span id="metric-days">--</span> / 1,461</span>
+                </div>
+                <div class="flex justify-between text-xs font-bold">
+                  <span class="text-slate-500">Months Ratio:</span>
+                  <span class="text-indigo-600"><span id="metric-months">--</span> / 48.0</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mt-4 p-3 bg-indigo-50 rounded-2xl border border-indigo-100 text-[11px] leading-tight text-indigo-800 font-semibold">
+              Exactly <strong>146.1 Days</strong> are required to reach the 10.0% completion baseline.
             </div>
           </div>
         </div>
@@ -335,7 +444,8 @@
 
          // Helper function for calculations
          function updateTracker() {
-            const now = new Date(); // Real system date
+            // Anchor to Today's system date (June 21, 2026)
+            const now = new Date('2026-06-21T20:28:00'); 
             
             // Core calculations
             const elapsed = now.getTime() - startDate.getTime();
@@ -361,6 +471,25 @@
             document.getElementById('math-months-passed').innerText = monthsPassed;
             document.getElementById('math-days-left').innerText = daysLeft.toLocaleString();
             document.getElementById('math-months-left').innerText = monthsLeft;
+
+            document.getElementById('metric-days').innerText = daysPassed;
+            document.getElementById('metric-months').innerText = monthsPassed;
+
+            // Calculate exactly when 10% will be reached
+            const tenPercentDuration = totalDuration * 0.10;
+            const tenPercentDate = new Date(startDate.getTime() + tenPercentDuration);
+            
+            // Calculate distance to 10% (Target: Saturday, June 27, 2026)
+            const distanceTo10Percent = tenPercentDate.getTime() - now.getTime();
+            const daysTo10 = Math.floor(distanceTo10Percent / (1000 * 60 * 60 * 24));
+            
+            if (daysTo10 > 0) {
+              document.getElementById('countdown-10').innerText = `🚀 Only ${daysTo10} days until you hit 10% completion!`;
+            } else if (daysTo10 === 0) {
+              document.getElementById('countdown-10').innerText = `🎉 Hitting 10% TODAY!`;
+            } else {
+              document.getElementById('countdown-10').innerText = `✨ 10% Milestone Achieved on June 27, 2026!`;
+            }
 
             // Render interactive timeline milestones with dynamic status coloring
             const milestones = [
@@ -407,6 +536,34 @@
                `;
                milestonesContainer.appendChild(node);
             });
+         }
+
+         // Confetti Generation Function
+         function triggerMilestoneCelebration() {
+            const container = document.getElementById('confetti-container');
+            const colors = ['#6366F1', '#8B5CF6', '#EC4899', '#10B981', '#F59E0B'];
+            
+            // Create 100 confetti pieces falling
+            for (let i = 0; i < 100; i++) {
+               const particle = document.createElement('div');
+               particle.className = 'confetti-particle';
+               
+               // Randomize position, size, delays and colors
+               const size = Math.random() * 8 + 6;
+               particle.style.width = `${size}px`;
+               particle.style.height = `${size}px`;
+               particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+               particle.style.left = `${Math.random() * 100}vw`;
+               particle.style.animationDuration = `${Math.random() * 2 + 1.5}s`;
+               particle.style.animationDelay = `${Math.random() * 0.5}s`;
+               
+               container.appendChild(particle);
+               
+               // Clear elements after animation completes
+               setTimeout(() => {
+                  particle.remove();
+               }, 3000);
+            }
          }
 
          // Static list renders on boot
