@@ -157,9 +157,9 @@
           </div>
         </div>
 
-        <!-- SPECIAL FEATURE: Road to 10% Milestone Interactive Widget -->
+        <!-- SPECIAL FEATURE: Road to 20% Milestone Interactive Widget -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="md:col-span-2 bg-gradient-to-br from-indigo-900 via-slate-950 to-purple-950 text-white p-6 rounded-3xl border border-indigo-500/20 shadow-xl relative overflow-hidden flex flex-col justify-between min-h-[220px]">
+          <div class="md:col-span-2 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-950 text-white p-6 rounded-3xl border border-indigo-500/20 shadow-xl relative overflow-hidden flex flex-col justify-between min-h-[220px]">
              <!-- Abstract background waves -->
              <div class="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-400 via-transparent to-transparent pointer-events-none"></div>
              
@@ -167,11 +167,11 @@
                <div class="flex justify-between items-start">
                  <div>
                    <span class="px-2 py-1 text-[9px] font-black tracking-widest uppercase bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 rounded">Upcoming Target</span>
-                   <h2 class="text-2xl font-black tracking-tight mt-2">The Double-Digit 10% Milestone</h2>
+                   <h2 class="text-2xl font-black tracking-tight mt-2">The Fifth-Way 20% Milestone</h2>
                  </div>
                  <div class="text-right">
                    <p class="text-xs text-indigo-200 font-semibold uppercase tracking-widest">Milestone Date</p>
-                   <p class="text-sm font-extrabold text-amber-400">Saturday, June 27, 2026</p>
+                   <p class="text-sm font-extrabold text-amber-400">Thursday, November 19, 2026</p>
                  </div>
                </div>
 
@@ -179,18 +179,18 @@
                <div class="mt-6 space-y-2">
                  <div class="flex justify-between items-center text-xs">
                    <span class="text-indigo-200/80 font-medium">Climbing from Current Progress</span>
-                   <span id="climb-percentage" class="font-black text-indigo-300">9.6% / 10.0%</span>
+                   <span id="climb-percentage" class="font-black text-indigo-300">--% / 20.0%</span>
                  </div>
                  <div class="h-2 w-full bg-slate-800 rounded-full overflow-hidden border border-indigo-500/10">
-                   <div id="climb-bar" class="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full" style="width: 95.8%"></div>
+                   <div id="climb-bar" class="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full" style="width: 0%"></div>
                  </div>
                </div>
              </div>
 
              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-6 pt-4 border-t border-indigo-500/10 relative z-10">
                 <div class="flex items-center gap-2">
-                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
-                  <span id="countdown-10" class="text-xs font-bold text-indigo-100 tracking-tight">Counting down...</span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-ping"></span>
+                  <span id="countdown-20" class="text-xs font-bold text-indigo-100 tracking-tight">Counting down...</span>
                 </div>
                 <!-- Interactive Button to trigger custom confetti -->
                 <button 
@@ -203,7 +203,7 @@
              </div>
           </div>
 
-          <!-- Time Passed Math Visualizer (from previous feedback) -->
+          <!-- Time Passed Math Visualizer -->
           <div class="bg-white p-6 rounded-3xl border border-slate-200/60 shadow-sm flex flex-col justify-between">
             <div>
               <p class="text-xs font-black uppercase tracking-widest text-indigo-600 mb-1">Dynamic Calculation</p>
@@ -223,7 +223,7 @@
             </div>
             
             <div class="mt-4 p-3 bg-indigo-50 rounded-2xl border border-indigo-100 text-[11px] leading-tight text-indigo-800 font-semibold">
-              Exactly <strong>146.1 Days</strong> are required to reach the 10.0% completion baseline.
+              Exactly <strong>292.2 Days</strong> are required to reach the 20.0% completion baseline.
             </div>
           </div>
         </div>
@@ -268,6 +268,7 @@
           </div>
         </div>
 
+        <!-- Regulations block -->
         <div class="bg-amber-50/50 p-6 rounded-3xl border border-amber-200/60 shadow-sm flex flex-col md:flex-row gap-4 items-start">
           <div class="p-3 bg-amber-100 text-amber-800 rounded-2xl">
             <!-- Inline SVG for Info -->
@@ -338,7 +339,7 @@
             </div>
           </div>
 
-          <!-- Technical Implementation Track & Milestones Met -->
+          <!-- Technical Implementation Track -->
           <div class="space-y-6">
             <div class="bg-white p-6 rounded-3xl border border-slate-200/60 shadow-sm">
               <h3 class="font-black text-slate-800 uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
@@ -444,16 +445,14 @@
 
          // Helper function for calculations
          function updateTracker() {
-            // Anchor to Today's system date (June 21, 2026)
-            const now = new Date('2026-06-21T20:28:00'); 
+            const now = new Date(); 
             
             // Core calculations
             const elapsed = now.getTime() - startDate.getTime();
             const percentage = Math.min(100, Math.max(0, (elapsed / totalDuration) * 100));
             
-            const diffDays = (d1, d2) => Math.ceil(Math.abs(d1 - d2) / (1000 * 60 * 60 * 24));
-            const daysPassed = diffDays(now, startDate);
-            const daysLeft = diffDays(endDate, now);
+            const daysPassed = Math.max(0, Math.floor((now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)));
+            const daysLeft = Math.max(0, Math.floor((endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)));
             const monthsLeft = (daysLeft / 30.4375).toFixed(1);
             const monthsPassed = (daysPassed / 30.4375).toFixed(1);
 
@@ -475,23 +474,28 @@
             document.getElementById('metric-days').innerText = daysPassed;
             document.getElementById('metric-months').innerText = monthsPassed;
 
-            // Calculate exactly when 10% will be reached
-            const tenPercentDuration = totalDuration * 0.10;
-            const tenPercentDate = new Date(startDate.getTime() + tenPercentDuration);
+            // Calculate exactly when 20% will be reached (20% of 1461 days is ~292.2 days)
+            const twentyPercentDuration = totalDuration * 0.20;
+            const twentyPercentDate = new Date(startDate.getTime() + twentyPercentDuration);
             
-            // Calculate distance to 10% (Target: Saturday, June 27, 2026)
-            const distanceTo10Percent = tenPercentDate.getTime() - now.getTime();
-            const daysTo10 = Math.floor(distanceTo10Percent / (1000 * 60 * 60 * 24));
+            // Distance calculations to 20% target boundary
+            const distanceTo20Percent = twentyPercentDate.getTime() - now.getTime();
+            const daysTo20 = Math.ceil(distanceTo20Percent / (1000 * 60 * 60 * 24));
             
-            if (daysTo10 > 0) {
-              document.getElementById('countdown-10').innerText = `🚀 Only ${daysTo10} days until you hit 10% completion!`;
-            } else if (daysTo10 === 0) {
-              document.getElementById('countdown-10').innerText = `🎉 Hitting 10% TODAY!`;
+            // Dynamically scale the micro-climb progress bar relative to the 20% limit ceiling
+            const microPercentage = Math.min(100, Math.max(0, (percentage / 20) * 100));
+            document.getElementById('climb-percentage').innerText = `${Math.min(20, percentage).toFixed(1)}% / 20.0%`;
+            document.getElementById('climb-bar').style.width = `${microPercentage}%`;
+
+            if (daysTo20 > 0) {
+              document.getElementById('countdown-20').innerText = `🚀 Only ${daysTo20} days until you hit 20% completion!`;
+            } else if (daysTo20 === 0) {
+              document.getElementById('countdown-20').innerText = `🎉 Hitting 20% TODAY!`;
             } else {
-              document.getElementById('countdown-10').innerText = `✨ 10% Milestone Achieved on June 27, 2026!`;
+              document.getElementById('countdown-20').innerText = `✨ 20% Milestone Achieved on November 19, 2026!`;
             }
 
-            // Render interactive timeline milestones with dynamic status coloring
+            // Render interactive timeline milestones
             const milestones = [
                { name: 'Start Date', date: 'Feb 1, 2026', pos: 0, status: 'completed' },
                { name: 'Target Setting Paperwork', date: 'Submitted', pos: 2, status: 'completed' },
@@ -543,12 +547,10 @@
             const container = document.getElementById('confetti-container');
             const colors = ['#6366F1', '#8B5CF6', '#EC4899', '#10B981', '#F59E0B'];
             
-            // Create 100 confetti pieces falling
             for (let i = 0; i < 100; i++) {
                const particle = document.createElement('div');
                particle.className = 'confetti-particle';
                
-               // Randomize position, size, delays and colors
                const size = Math.random() * 8 + 6;
                particle.style.width = `${size}px`;
                particle.style.height = `${size}px`;
@@ -559,7 +561,6 @@
                
                container.appendChild(particle);
                
-               // Clear elements after animation completes
                setTimeout(() => {
                   particle.remove();
                }, 3000);
@@ -568,7 +569,6 @@
 
          // Static list renders on boot
          function initializeDashboard() {
-            // Render Lit Review checklist items
             const litContainer = document.getElementById('lit-review-topics');
             litContainer.innerHTML = '';
             litReviewTopics.forEach(topic => {
@@ -581,7 +581,6 @@
                litContainer.appendChild(el);
             });
 
-            // Render Research Aims
             const aimsContainer = document.getElementById('aims-list');
             aimsContainer.innerHTML = '';
             aims.forEach(aim => {
@@ -600,7 +599,6 @@
                aimsContainer.appendChild(el);
             });
 
-            // Render Completed milestones met list
             const completedContainer = document.getElementById('completed-milestones');
             completedContainer.innerHTML = '';
             completedMilestones.forEach(cm => {
@@ -619,7 +617,6 @@
             });
          }
 
-         // Real time digital ticking clock
          function runClock() {
             setInterval(() => {
                const timer = new Date();
@@ -631,8 +628,6 @@
             initializeDashboard();
             updateTracker();
             runClock();
-            
-            // Redraw dynamics if they keep the window open across midnights
             setInterval(updateTracker, 60000); 
          };
       </script>
